@@ -1,0 +1,20 @@
+name: phpcs
+
+on: ['push']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    name: Runs phpcs
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction
+
+      - name: Execute tests
+        run: vendor/bin/phpcs

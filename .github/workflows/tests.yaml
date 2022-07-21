@@ -1,0 +1,33 @@
+name: run-tests
+
+on: ['push']
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [8.0,8.1]
+
+    name: Runs tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction
+
+      - name: Execute unit tests
+        run: vendor/bin/phpunit
+
+      - name: Execute infection tests
+        run: vendor/bin/infection -s
