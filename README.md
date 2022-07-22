@@ -1,21 +1,12 @@
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
-# Compare two arrays and see diff
+# Array Comparison
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/fortress/array-comparison.svg?style=flat-square)](https://packagist.org/packages/fortress/array-comparison)
-[![Tests](https://github.com/fortress/array-comparison/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/fortress/array-comparison/actions/workflows/run-tests.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/fortress/array-comparison.svg?style=flat-square)](https://packagist.org/packages/fortress/array-comparison)
+[![Tests](https://github.com/fortress/array-comparison/actions/workflows/run-tests/badge.svg?branch=main)](https://github.com/fortress/array-comparison/actions?query=workflow%3Arun-tests)
 
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
+Compare two associative arrays and see the difference between them.
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/array-comparison.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/array-comparison)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Supports nested associative arrays and array collections.
 
 ## Installation
 
@@ -28,8 +19,71 @@ composer require fortress/array-comparison
 ## Usage
 
 ```php
-$skeleton = new Fortress\ArrayComparison();
-echo $skeleton->echoPhrase('Hello, Fortress!');
+$expected = [
+    'object' => [
+        'to_be_removed' => [
+            'item1',
+            'item2',
+        ],
+        'to_be_changed' => [
+            'item3',
+            'item4',
+        ]
+    ]
+];
+
+$actual = [
+    'object' => [
+        'to_be_added' => [
+            'item3',
+            'item4',
+        ],
+        'to_be_changed' => [
+            'item5',
+            'item6',
+        ],
+    ]
+];
+
+$comparison = new Fortress\ArrayComparison();
+$comparison->getDiff($expected, $actual);
+```
+
+Results in:
+
+``` 
+[
+    'added' => [
+        'object' => [
+            'to_be_added' => [
+                'item3',
+                'item4',
+            ],
+        ]
+    ],
+    'removed' => [
+        'object' => [
+            'to_be_removed' => [
+                'item1',
+                'item2',
+            ],
+        ]
+    ],
+    'changed' => [
+        'object' => [
+            'to_be_changed' => [
+                'old' => [
+                    'item3',
+                    'item4',
+                ],
+                'new' => [
+                    'item5',
+                    'item6',
+                ],
+            ],
+        ],
+    ],
+]
 ```
 
 ## Testing
@@ -37,23 +91,6 @@ echo $skeleton->echoPhrase('Hello, Fortress!');
 ```bash
 composer test
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [Paul Crashley](https://github.com/Fortress)
-- [All Contributors](../../contributors)
 
 ## License
 
