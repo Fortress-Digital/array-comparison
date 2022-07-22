@@ -1,7 +1,7 @@
 <?php
 
 /**
- * testCoverageCheck.php
+ * coverage.php
  * check if the coverage of phpunit is above specified threshold
  * https://cylab.be/blog/114/fail-a-phpunit-test-if-coverage-goes-below-a-threshold
  */
