@@ -143,6 +143,15 @@ final class ArrayComparisonTest extends TestCase
                 'country' => [
                     'name' => 'United Kingdom',
                     'code' => 'UK',
+                ],
+                'tags' => [
+                    'home',
+                    'work',
+                ],
+            ],
+            'organisations' => [
+                [
+                    'name' => 'Test Organisation',
                 ]
             ],
             'name' => 'Jeff',
@@ -157,7 +166,20 @@ final class ArrayComparisonTest extends TestCase
                 'country' => [
                     'name' => 'Wales',
                     'countryCode' => 'Cym',
-                ]
+                ],
+                'tags' => [
+                    'home',
+                    'business',
+                    'leisure',
+                ],
+            ],
+            'organisations' => [
+                [
+                    'name' => 'Test Organisation (edited)',
+                ],
+                [
+                    'name' => 'Another Organisation',
+                ],
             ],
             'test' => [
                 'name' => 'Nested assoc',
@@ -191,10 +213,29 @@ final class ArrayComparisonTest extends TestCase
                             'new' => 'Wales',
                         ]
                     ],
+                    'tags' => [
+                        'old' => [
+                            'home',
+                            'work',
+                        ],
+                        'new' => [
+                            'home',
+                            'business',
+                            'leisure',
+                        ],
+                    ],
                 ],
                 'name' => [
                     'old' => 'Jeff',
                     'new' => 'John',
+                ],
+                'organisations' => [
+                    0 => [
+                        'name' => [
+                            'old' => 'Test Organisation',
+                            'new' => 'Test Organisation (edited)',
+                        ]
+                    ]
                 ],
             ],
             'added' => [
@@ -210,7 +251,12 @@ final class ArrayComparisonTest extends TestCase
                     'object' => [
                         'test' => 'true',
                     ],
-                ]
+                ],
+                'organisations' => [
+                    1 => [
+                        'name' => 'Another Organisation'
+                    ],
+                ],
             ],
         ], $sut->getDiff($expected, $actual));
     }

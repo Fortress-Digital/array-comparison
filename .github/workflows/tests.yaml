@@ -27,7 +27,10 @@ jobs:
           composer install --no-interaction
 
       - name: Execute unit tests
-        run: vendor/bin/phpunit
+        run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-xml ./tests/coverage
+
+      - name: Check coverage
+        run: php testCoverageCheck.php ./tests/coverage/index.xml 100
 
       - name: Execute infection tests
-        run: vendor/bin/infection -s
+        run: ./vendor/bin/infection -s

@@ -72,7 +72,7 @@ class ArrayComparison
             }
 
             # If this is a nested associative array, run the check over that array to get nested added fields
-            if (is_array($actualValue) && !array_is_list($actualValue)) {
+            if ($this->isNestedObjects($actualValue)) {
                 $added = $this->getAdded($expected[$actualKey], $actualValue);
 
                 if (!empty($added)) {
@@ -100,7 +100,7 @@ class ArrayComparison
             }
 
             # If this is a nested associative array, run the check over that array to get nested removed fields
-            if (is_array($expectedValue) && !array_is_list($expectedValue)) {
+            if ($this->isNestedObjects($expectedValue)) {
                 $removed = $this->getRemoved($expectedValue, $actual[$expectedKey]);
 
                 if (!empty($removed)) {
@@ -124,7 +124,7 @@ class ArrayComparison
         foreach ($expected as $expectedKey => $expectedValue) {
             if (array_key_exists($expectedKey, $actual)) {
                 # If this is a nested associative array, run the check over that array to get nested changes
-                if (is_array($expectedValue) && !array_is_list($expectedValue)) {
+                if ($this->isNestedObjects($expectedValue)) {
                     $changed = $this->getChanged($expectedValue, $actual[$expectedKey]);
 
                     if (!empty($changed)) {
@@ -146,5 +146,20 @@ class ArrayComparison
         }
 
         return $diff;
+    }
+
+    private function isNestedObjects(mixed $value): bool
+    {
+        if (is_array($value)) {
+            if (!array_is_list($value)) {
+                return true;
+            }
+
+            if (!empty($value) && is_array($value[0])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
