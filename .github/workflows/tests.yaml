@@ -30,7 +30,7 @@ jobs:
         run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-xml ./tests/coverage
 
       - name: Check coverage
-        run: php coverage.php ./tests/coverage/index.xml 100
+        run: php .github/coverage.php ./tests/coverage/index.xml 100
 
       - name: Execute infection tests
         run: ./vendor/bin/infection -s
