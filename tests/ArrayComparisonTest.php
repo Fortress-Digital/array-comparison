@@ -28,8 +28,6 @@ final class ArrayComparisonTest extends TestCase
 
     public function testAssociativeArrayReturnsDiffWhenNestedFieldAdded(): void
     {
-        $sut = new ArrayComparison();
-
         $expected = [
             'zip' => 'BA1124',
             'city' => 'Cardiff',
@@ -47,6 +45,8 @@ final class ArrayComparisonTest extends TestCase
             'city' => 'Cardiff',
             'county' => 'Cardiff',
         ];
+
+        $sut = new ArrayComparison();
 
         self::assertEquals([
             'added' => [
@@ -61,8 +61,6 @@ final class ArrayComparisonTest extends TestCase
 
     public function testAssociativeArrayReturnsDiffWhenNestedFieldRemoved(): void
     {
-        $sut = new ArrayComparison();
-
         $expected = [
             'zip' => 'BA1124',
             'county' => 'Cardiff',
@@ -81,6 +79,8 @@ final class ArrayComparisonTest extends TestCase
             'city' => 'Cardiff',
         ];
 
+        $sut = new ArrayComparison();
+
         self::assertEquals([
             'removed' => [
                 'county' => 'Cardiff',
@@ -93,8 +93,6 @@ final class ArrayComparisonTest extends TestCase
 
     public function testAssociativeArrayReturnsDiffWhenNestedFieldsChanged(): void
     {
-        $sut = new ArrayComparison();
-
         $expected = [
             'zip' => 'BA1124',
             'county' => 'Cardiff',
@@ -115,6 +113,8 @@ final class ArrayComparisonTest extends TestCase
             ],
         ];
 
+        $sut = new ArrayComparison();
+
         self::assertEquals([
             'changed' => [
                 'user' => [
@@ -131,133 +131,125 @@ final class ArrayComparisonTest extends TestCase
         ], $sut->getDiff($expected, $actual));
     }
 
-    public function testAssociativeArrayReturnsDiffForMultilayerChanges(): void
+    public function testNestedArrayListReturnedAsFullArrayWhenAddedRemovedOrEdited(): void
     {
-        $sut = new ArrayComparison();
-
         $expected = [
-            'address' => [
-                'town' => 'Cardiff',
-                'county' => 'Cardiff',
-                'zip' => 'AA1123',
-                'country' => [
-                    'name' => 'United Kingdom',
-                    'code' => 'UK',
+            'object' => [
+                'to_be_removed' => [
+                    'item1',
+                    'item2',
                 ],
-                'tags' => [
-                    'home',
-                    'work',
-                ],
-            ],
-            'organisations' => [
-                [
-                    'name' => 'Test Organisation',
+                'to_be_changed' => [
+                    'item3',
+                    'item4',
                 ]
-            ],
-            'name' => 'Jeff',
-            'surname' => 'Smith',
+            ]
         ];
 
         $actual = [
-            'address' => [
-                'town' => 'Cardiff',
-                'county' => 'Cardiff County',
-                'postcode' => 'AA1123',
-                'country' => [
-                    'name' => 'Wales',
-                    'countryCode' => 'Cym',
+            'object' => [
+                'to_be_added' => [
+                    'item3',
+                    'item4',
                 ],
-                'tags' => [
-                    'home',
-                    'business',
-                    'leisure',
+                'to_be_changed' => [
+                    'item5',
+                    'item6',
                 ],
-            ],
-            'organisations' => [
-                [
-                    'name' => 'Test Organisation (edited)',
-                ],
-                [
-                    'name' => 'Another Organisation',
-                ],
-            ],
-            'test' => [
-                'name' => 'Nested assoc',
-                'object' => [
-                    'test' => 'true',
-                ],
-            ],
-            'name' => 'John',
-            'familyName' => 'Smith',
+            ]
         ];
 
+        $sut = new ArrayComparison();
+
         self::assertEquals([
-            'removed' => [
-                'address' => [
-                    'zip' => 'AA1123',
-                    'country' => [
-                        'code' => 'UK',
+            'added' => [
+                'object' => [
+                    'to_be_added' => [
+                        'item3',
+                        'item4',
                     ],
-                ],
-                'surname' => 'Smith',
+                ]
+            ],
+            'removed' => [
+                'object' => [
+                    'to_be_removed' => [
+                        'item1',
+                        'item2',
+                    ],
+                ]
             ],
             'changed' => [
-                'address' => [
-                    'county' => [
-                        'old' => 'Cardiff',
-                        'new' => 'Cardiff County',
-                    ],
-                    'country' => [
-                        'name' => [
-                            'old' => 'United Kingdom',
-                            'new' => 'Wales',
-                        ]
-                    ],
-                    'tags' => [
+                'object' => [
+                    'to_be_changed' => [
                         'old' => [
-                            'home',
-                            'work',
+                            'item3',
+                            'item4',
                         ],
                         'new' => [
-                            'home',
-                            'business',
-                            'leisure',
+                            'item5',
+                            'item6',
                         ],
                     ],
                 ],
-                'name' => [
-                    'old' => 'Jeff',
-                    'new' => 'John',
-                ],
-                'organisations' => [
-                    0 => [
-                        'name' => [
-                            'old' => 'Test Organisation',
-                            'new' => 'Test Organisation (edited)',
-                        ]
-                    ]
+            ],
+        ], $sut->getDiff($expected, $actual));
+    }
+
+    public function testCollectionsOfAssociativeArraysReturnAsNested(): void
+    {
+        $expected = [
+            'object' => [
+                'collection' => [
+                    [
+                        'name' => 'Item 1',
+                    ],
+                    [
+                        'name' => 'Item 2',
+                    ],
                 ],
             ],
+        ];
+
+        $actual = [
+            'object' => [
+                'collection' => [
+                    [
+                        'name' => 'Item 1',
+                    ],
+                    [
+                        'name' => 'Item 2 (updated)',
+                    ],
+                    [
+                        'name' => 'Item 3',
+                    ],
+                ],
+            ],
+        ];
+
+        $sut = new ArrayComparison();
+
+        self::assertEquals([
             'added' => [
-                'address' => [
-                    'country' => [
-                        'countryCode' => 'Cym',
-                    ],
-                    'postcode' => 'AA1123',
-                ],
-                'familyName' => 'Smith',
-                'test' => [
-                    'name' => 'Nested assoc',
-                    'object' => [
-                        'test' => 'true',
-                    ],
-                ],
-                'organisations' => [
-                    1 => [
-                        'name' => 'Another Organisation'
+                'object' => [
+                    'collection' => [
+                        2 => [
+                            'name' => 'Item 3',
+                        ],
                     ],
                 ],
             ],
+            'changed' => [
+                'object' => [
+                    'collection' => [
+                        1 => [
+                            'name' => [
+                                'new' => 'Item 2 (updated)',
+                                'old' => 'Item 2',
+                            ]
+                        ],
+                    ],
+                ],
+            ]
         ], $sut->getDiff($expected, $actual));
     }
 
