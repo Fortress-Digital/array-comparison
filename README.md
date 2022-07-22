@@ -2,7 +2,7 @@
 # Array Comparison
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/fortress/array-comparison.svg?style=flat-square)](https://packagist.org/packages/fortress/array-comparison)
-[![Tests](https://github.com/fortress/array-comparison/actions/workflows/run-tests/badge.svg?branch=main)](https://github.com/fortress/array-comparison/actions?query=workflow%3Arun-tests)
+[![Tests](https://github.com/Fortress-Digital/array-comparison/actions/workflows/run-tests.yaml/badge.svg)](https://github.com/Fortress-Digital/array-comparison/actions/workflows/run-tests.yaml)
 
 Compare two associative arrays and see the difference between them.
 
